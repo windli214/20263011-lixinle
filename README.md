@@ -101,10 +101,16 @@ cmake --build build
 
 ## 七、我的说明（5 分，请填写）
 
-- 姓名：
-- 学号：
+- 姓名：李歆竻
+- 学号：20263011
 - 实现思路：
+  - 在 `include/Complex.h` 的 `private` 区声明 `double real;` 和 `double imag;`，把实部和虚部封装在类内部，外部只能通过公有成员函数访问。
+  - 构造函数用初始化列表 `Complex::Complex(double r, double i) : real(r), imag(i) {}` 初始化成员；借助默认参数同时支持 `Complex z;`、`Complex z(3);`、`Complex z(3, 4);` 三种写法。
+  - `operator+`、`operator-` 声明为 `const` 成员函数，参数用 `const Complex&` 避免拷贝；函数体只读取 `real`、`imag`，返回一个新的 `Complex` 对象，不修改 `*this` 和传入的操作数。
+  - `print()` 先判断虚部正负：`imag >= 0` 输出 `a + bi`，否则输出 `a - bi`（虚部取绝对值）；`getReal()`、`getImag()` 只是返回对应成员的只读接口。
 - 遇到的问题与解决：
+  - **问题**：运算符重载如果写成修改 `*this` 再返回引用，`a + b` 之后 `a` 的值会被改掉。**解决**：把 `operator+`、`operator-` 声明为 `const` 成员函数并返回新对象，接口测试中「运算不修改操作数」的用例全部通过。
+  - **问题**：直接输出负虚部会得到 `a + -2i`，与题目要求的 `a - bi` 格式不符。**解决**：在 `print()` 中分支处理，负数时输出 `" - "` 拼上 `-imag`，最终输出 `a - b = 2 + 2i`，与示例一致。
 
 ## 八、提交前自检清单
 
